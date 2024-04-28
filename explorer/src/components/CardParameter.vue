@@ -11,19 +11,24 @@ const props = defineProps({
 const formatter = useFormatter();
 function calculateValue(value: any) {
   if (Array.isArray(value)) {
-    return (value[0] && value[0].amount) || '-';
+    const amount = value[0]?.amount;
+    return amount !== undefined ? amount : '-';
   }
-  if(String(value).search(/^\d+s$/g) > -1) {
-    return formatSeconds(value)
+
+  if (typeof value === 'string' && /^\d+s$/.test(value)) {
+    return formatSeconds(value);
   }
+
   const newValue = Number(value);
-  if (`${newValue}` === 'NaN' || typeof value === 'boolean') {
+
+  if (isNaN(newValue) || typeof value === 'boolean') {
     return value;
   }
 
-  if (newValue < 1 && newValue > 0) {
+  if (newValue > 0 && newValue < 1) {
     return formatter.formatDecimalToPercent(value);
   }
+
   return newValue;
 }
 
