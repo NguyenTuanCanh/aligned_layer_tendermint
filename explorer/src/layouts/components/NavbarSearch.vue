@@ -37,25 +37,20 @@ function confirm() {
   const routeParams = vueRouters?.currentRoute?.value;
 
   if (!Object.values(routeParams?.params).includes(key)) {
+    let path;
     if (height.test(key)) {
-      vueRouters.push({ path: `/${current}/block/${key}` });
-      setTimeout(() => {
-        closeSearchModal();
-      }, 1000);
+      path = `/${current}/block/${key}`;
     } else if (txhash.test(key)) {
-      vueRouters.push({ path: `/${current}/tx/${key}` });
-      setTimeout(() => {
-        closeSearchModal();
-      }, 1000);
-      //     this.$router.push({ name: 'transaction', params: { chain: c.chain_name, hash: key } })
+      path = `/${current}/tx/${key}`;
     } else if (addr.test(key)) {
-      vueRouters.push({ path: `/${current}/account/${key}` });
-      setTimeout(() => {
-        closeSearchModal();
-      }, 1000);
+      path = `/${current}/account/${key}`;
     } else {
-      errorMessage.value = 'The input not recognized';
+      errorMessage.value = 'The input was not recognized';
+      return; // Exit early since input is invalid
     }
+
+    vueRouters.push({ path });
+    setTimeout(closeSearchModal, 1000);
   }
 }
 </script>
